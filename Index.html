@@ -1,0 +1,77 @@
+<!DOCTYPE html><html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome My Birthday</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body { background: linear-gradient(to bottom right, #ffe4e1, #fffacd, #d0f0c0); }
+    .bubble { background-color: white; border-radius: 1rem; padding: 1rem; margin: 0.5rem 0; max-width: 80%; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .chat-container { max-width: 600px; margin: 2rem auto; padding: 2rem; }
+    .input-box { margin-bottom: 1.5rem; }
+  </style>
+</head>
+<body class="font-sans">
+  <div class="text-center mt-10">
+    <h1 class="text-4xl font-bold text-pink-600">WELCOME MY BIRTHDAY 🎉</h1>
+    <p class="text-sm mt-2 text-gray-700">Langsung aja jawab chat-nya yaa ✨</p>
+  </div>  <div id="chat" class="chat-container"></div>  <script>
+    const questions = [
+      "Kamu kenal aku dari kapan sih?",
+      "First impression kamu tentang aku?",
+      "Kalau disuruh muji aku, kamu bakal bilang apa? 😌",
+      "Hal kecil yang kadang bikin kamu gemes sama aku 🙈",
+      "Kapan sih kamu paling ga suka kalau aku lagi ngapain?",
+      "Mau nitip pesan atau ucapan buat aku? 💌",
+      "Pilih karakter bebek favoritmu (A/B/C):",
+      "Tulis nama samaranmu (wajib ya!)"
+    ];
+
+    const responses = [];
+    const chatContainer = document.getElementById("chat");
+
+    let index = 0;
+    function nextQuestion() {
+      if (index < questions.length) {
+        const bubble = document.createElement("div");
+        bubble.className = "bubble text-gray-800";
+        bubble.textContent = questions[index];
+        chatContainer.appendChild(bubble);
+
+        const input = document.createElement("input");
+        input.className = "w-full p-2 rounded-lg border border-gray-300 mt-2 input-box";
+        input.placeholder = "Jawaban kamu di sini...";
+        chatContainer.appendChild(input);
+        input.focus();
+
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" && input.value.trim() !== "") {
+            responses.push(input.value.trim());
+            input.disabled = true;
+            input.classList.add("bg-gray-100");
+            index++;
+            nextQuestion();
+          }
+        });
+      } else {
+        saveResponses();
+        showFinalMessage();
+      }
+    }
+
+    function saveResponses() {
+      let stored = JSON.parse(localStorage.getItem("birthdayData") || "[]");
+      stored.push(responses);
+      localStorage.setItem("birthdayData", JSON.stringify(stored));
+    }
+
+    function showFinalMessage() {
+      const bubble = document.createElement("div");
+      bubble.className = "bubble text-green-700 font-semibold";
+      bubble.innerHTML = "Terima kasih udah isi dengan jujur 💚 Jawaban kamu langsung masuk ke <strong>Kotak Rahasia</strong> ✨";
+      chatContainer.appendChild(bubble);
+    }
+
+    nextQuestion();
+  </script></body>
+</html>
